@@ -1,12 +1,9 @@
 {
-  "name": "typescript-library-skeleton",
+  "name": "@oresoftware/json-stream-parser",
   "version": "0.0.1001",
-  "description": "Semver-oriented TypeScript library skeleton.",
+  "description": "Parse JSON streams into JS objects.",
   "main": "dist/index.js",
-  "bin": {
-    "example": "cli/example.sh",
-    "example.js": "cli/example.js"
-  },
+  "bin": {},
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "scripts": {
@@ -15,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ORESoftware/typescript-library-skeleton.git"
+    "url": "git+https://github.com/ORESoftware/json-parser.git"
   },
   "keywords": [
     "typescript",
@@ -26,9 +23,9 @@
   "author": "TODO Yo.Mama",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
-    "url": "https://github.com/ORESoftware/typescript-library-skeleton/issues"
+    "url": "https://github.com/ORESoftware/json-parser/issues"
   },
-  "homepage": "https://github.com/ORESoftware/typescript-library-skeleton#readme",
+  "homepage": "https://github.com/ORESoftware/json-parser#readme",
   "dependencies": {},
   "devDependencies": {
     "@types/core-js": "^0.9.46",
