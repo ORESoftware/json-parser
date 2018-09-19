@@ -9,18 +9,15 @@ export const r2gSmokeTest = function () {
 
 type EVCb<T> = (err: any, T: any) => void;
 
-
 export class JSONParser extends stream.Transform {
 
   lastLineData = '';
-  objectMode = true;
 
   constructor() {
-    super();
-
+    super({objectMode: true});
   }
 
-  transform(chunk: any, encoding: string, cb: Function) {
+  _transform(chunk: any, encoding: string, cb: Function) {
 
     let data = String(chunk);
     if (this.lastLineData) {
@@ -30,7 +27,7 @@ export class JSONParser extends stream.Transform {
     let lines = data.split('\n');
     this.lastLineData = lines.splice(lines.length - 1, 1)[0];
 
-    lines.forEach(l => {
+    for (let l of lines) {
       try {
         // l might be an empty string; ignore if so
         l && this.push(JSON.parse(l));
@@ -38,13 +35,13 @@ export class JSONParser extends stream.Transform {
       catch (err) {
         // noop
       }
-    });
+    }
 
     cb();
 
   }
 
-  flush(cb: Function) {
+  _flush(cb: Function) {
     if (this.lastLineData) {
       try {
         this.push(JSON.parse(this.lastLineData));
@@ -56,7 +53,6 @@ export class JSONParser extends stream.Transform {
     this.lastLineData = '';
     cb();
   }
-
 
 }
 
