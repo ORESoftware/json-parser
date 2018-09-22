@@ -28,13 +28,13 @@ k.stdout.pipe(new JSONParser()).on('data', d => {
   
   clearTimeout(to);
   try {
-    assert.deepStrictEqual(d, v);
+    assert.deepStrictEqual(d, {foo: 'bar'});
+    process.exit(0);
   }
   catch (err) {
-    throw err.message;
+    console.error(err.message);
+    process.exit(1);
   }
-  
-  process.exit(0);
   
 });
 
