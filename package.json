@@ -1,6 +1,6 @@
 {
   "name": "@oresoftware/json-stream-parser",
-  "version": "0.0.1005",
+  "version": "0.0.1006",
   "description": "Parse JSON streams into JS objects.",
   "main": "dist/index.js",
   "bin": {},
@@ -32,6 +32,6 @@
     "@types/node": "^9.6.2"
   },
   "r2g": {
-    "test": "echo 'my foo'"
+    "test": "node .r2g/tests/smoke-test.1.js"
   }
 }
