@@ -1,7 +1,7 @@
 
 ## @oresoftware/json-stream-parser
 
-[![Version](https://img.shields.io/npm/v/json-stdio.svg?colorB=green)](https://www.npmjs.com/package/json-stdio)
+[![Version](https://img.shields.io/npm/v/@oresoftware/json-stream-parser.svg?colorB=green)](https://www.npmjs.com/package/@oresoftware/json-stream-parser)
 
 
 ### Transform stream
