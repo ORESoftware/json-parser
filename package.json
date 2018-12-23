@@ -3,7 +3,9 @@
   "version": "0.0.1008",
   "description": "Parse JSON streams into JS objects.",
   "main": "dist/index.js",
-  "bin": {},
+  "bin": {
+    "json_parser": "cli/json-parser.js"
+  },
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "scripts": {

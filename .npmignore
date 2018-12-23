@@ -23,11 +23,13 @@ docs
 .travis.yml
 suman.conf.js
 .nlu.json
+license.md
+readme.md
+.vcs.json
 
 ### matching
 *.log
 Dockerfile*
-*.md
 *.tgz
 tsconfig*.json
 

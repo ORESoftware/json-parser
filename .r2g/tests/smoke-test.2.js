@@ -14,12 +14,19 @@ process.on('unhandledRejection', (reason, p) => {
   process.exit(1);
 });
 
-console.log('Running test', __filename);
-
 const {JSONParser} = require('@oresoftware/json-stream-parser');
 
+console.log('Running test', __filename);
+
 const k = cp.spawn('bash');
-k.stdin.end(`echo '{"foo":"bar"}\n'`);
+const foo = 'medicine';
+
+k.stdin.end(`
+
+  foo="${foo}"
+  cat <<EOF\n{"foo":"$foo"}\nEOF
+
+`);
 
 const to = setTimeout(() => {
   console.error('did not receive parsed JSON object within alloted time.');
@@ -30,7 +37,7 @@ k.stdout.pipe(new JSONParser()).on('data', d => {
   
   clearTimeout(to);
   try {
-    assert.deepStrictEqual(d, {foo: 'bar'});
+    assert.deepStrictEqual(d, {foo: foo});
     process.exit(0);
   }
   catch (err) {
