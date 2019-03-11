@@ -29,7 +29,27 @@ import {JSONParser} from '@oresoftware/json-stream-parser';
 
 ## Examples
 
-Simple bash example:
+###### Simple Node.js example:
+
+
+```typescript
+
+import {JSONParser} from '@oresoftware/json-stream-parser';
+import * as net from 'net';
+const [port,host] = [6970,'localhost'];
+const ws = net.createConnection(port, host);
+
+ws.setEncoding('utf8')
+  .pipe(new JSONParser())   // tcp connection is bidirection/full-duplex .. we send JSON strings each way
+  .on('data', onData);    // we receive data coming from the tcp server here
+
+
+// and we send data like this:
+ws.write(JSON.stringify({'some':'data'}) + '\n', 'utf8', cb);
+
+```
+
+###### Simple bash example:
 
 ```js
 
