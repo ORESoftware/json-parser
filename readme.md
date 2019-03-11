@@ -26,6 +26,11 @@ import {JSONParser} from '@oresoftware/json-stream-parser';
 
 ```
 
+### Usage
+
+Right now, the library assumes each separate chunk of json is separated by newline characters.
+In the future, we could attempt to use a different delimiting character. Recommendations welcome.
+
 
 ## Examples
 
@@ -45,7 +50,7 @@ ws.setEncoding('utf8')
 
 
 // and we send data like this:
-ws.write(JSON.stringify({'some':'data'}) + '\n', 'utf8', cb);
+ws.write(JSON.stringify({'some':'data'}) + '\n', 'utf8', cb); // make sure it to include the newline char when you write
 
 ```
 
@@ -54,7 +59,7 @@ ws.write(JSON.stringify({'some':'data'}) + '\n', 'utf8', cb);
 ```js
 
 const k = cp.spawn('bash');
-k.stdin.end(`echo '{"foo":"bar"}\n'`);
+k.stdin.end(`echo '{"foo":"bar"}\n'`);  // make sure it to include the newline char when you write
 
 k.stdout.pipe(new JSONParser()).on('data', d => {
   // => {foo:'bar'}
@@ -62,7 +67,7 @@ k.stdout.pipe(new JSONParser()).on('data', d => {
 
 ```
 
-Bash example with bash variables:
+###### Bash example with bash variables:
 
 ```js
 
@@ -71,7 +76,7 @@ const k = cp.spawn('bash');
 k.stdin.end(`
 
   foo="medicine"
-  cat <<EOF\n{"foo":"$foo"}\nEOF
+  cat <<EOF\n{"foo":"$foo"}\nEOF  # make sure it to include the newline char when you write
 
 `);
 
