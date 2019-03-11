@@ -37,8 +37,8 @@ export class JSONParser extends stream.Transform {
       data = this.lastLineData + data;
     }
     
-    let lines = data.split('\n');
-    this.lastLineData = lines.splice(lines.length - 1, 1)[0];
+    const lines = data.split('\n');
+    this.lastLineData = lines.pop();
     
     for (let l of lines) {
       try {

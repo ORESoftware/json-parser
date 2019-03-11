@@ -1,6 +1,6 @@
 {
   "name": "@oresoftware/json-stream-parser",
-  "version": "0.0.1008",
+  "version": "0.0.108",
   "description": "Parse JSON streams into JS objects.",
   "main": "dist/index.js",
   "bin": {
@@ -9,8 +9,7 @@
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "suman test",
-    "postinstall": "./assets/postinstall.sh"
+    "test": "suman test"
   },
   "repository": {
     "type": "git",
