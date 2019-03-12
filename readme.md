@@ -37,7 +37,7 @@ Recommendations welcome.
 
 #### Simple Node.js example:
 
-##### Reading from stdin
+###### Reading from stdin
 
 ```typescript
 
@@ -47,7 +47,7 @@ process.stdin.resume().pipe(new JSONParser()).on('data', d => {
 
 ```
 
-##### Reading/writing to a tcp socket
+###### Reading/writing to a tcp socket
 
 ```typescript
 
@@ -64,6 +64,8 @@ ws.setEncoding('utf8')
 ws.write(JSON.stringify({'some':'data'}) + '\n', 'utf8', cb); // make sure to include the newline char when you write
 
 ```
+
+#### Using bash shell
 
 ###### Simple bash example:
 
