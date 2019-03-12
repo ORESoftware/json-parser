@@ -35,12 +35,22 @@ Recommendations welcome.
 
 ## Examples
 
-###### Simple Node.js example:
+#### Simple Node.js example:
 
+##### Reading from stdin
 
 ```typescript
 
-import {JSONParser} from '@oresoftware/json-stream-parser';
+process.stdin.resume().pipe(new JSONParser()).on('data', d => {
+  // now we got some POJSOs!
+});
+
+```
+
+##### Reading/writing to a tcp socket
+
+```typescript
+
 import * as net from 'net';
 const [port,host] = [6970,'localhost'];
 const ws = net.createConnection(port, host);
