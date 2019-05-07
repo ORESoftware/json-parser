@@ -51,17 +51,22 @@ export class JSONParser extends stream.Transform {
         continue;
       }
 
+      let json = null;
+
       try {
         l = String(l).trim();
         // l might be an empty string; ignore if so
-        l && this.push(JSON.parse(String(l).trim()));
+        l && (json = JSON.parse(String(l).trim()));
       } catch (err) {
         if (this.debug) {
           console.error('json-parser:', 'error parsing line:', l);
           console.error('json-parser:', err.message);
         }
+        continue;
         // noop
       }
+
+      json && this.push(json);
     }
 
     cb();
@@ -70,11 +75,20 @@ export class JSONParser extends stream.Transform {
 
   _flush(cb: Function) {
     if (this.lastLineData) {
+
+      let json = null, l = String(this.lastLineData).trim();
+
       try {
-        this.push(JSON.parse(this.lastLineData));
+        json = JSON.parse(l);
       } catch (err) {
-        // noop
+        if (this.debug) {
+          console.error('json-parser:', 'error parsing line:', l);
+          console.error('json-parser:', err.message);
+        }
       }
+
+      json && this.push(json);
+
     }
     this.lastLineData = '';
     cb();

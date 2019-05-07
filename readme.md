@@ -75,7 +75,7 @@ const k = cp.spawn('bash');
 k.stdin.end(`echo '{"foo":"bar"}\n'`);  // make sure to include the newline char when you write
 
 k.stdout.pipe(new JSONParser()).on('data', d => {
-  // => {foo:'bar'}
+  // => {foo: 'bar'}
 });
 
 ```
@@ -94,9 +94,7 @@ k.stdin.end(`
 `);
 
 k.stdout.pipe(new JSONParser()).on('data', d => {
-  
-    assert.deepStrictEqual(d, {foo: 'medicine'});
-  
+    assert.deepStrictEqual(d, {foo: 'medicine'});  // should pass
 });
 
 
@@ -110,5 +108,8 @@ If you JSON has unescaped newlines, then use the delimiter option.
 new JSONParser({delimiter: '∆∆∆'});  // use 3 alt-j's to separate json chunks, since newlines won't work
 
 ```
+
+For other solutions to parsing JSON from CLIs, see:
+https://stackoverflow.com/questions/56014438/get-single-line-json-from-aws-cli
 
 
