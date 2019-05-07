@@ -14,7 +14,7 @@
 
 ```bash
 
-$ npm i -S '@oresoftware/json-stream-parser'
+$ npm install '@oresoftware/json-stream-parser'
 
 ```
 
@@ -102,6 +102,13 @@ k.stdout.pipe(new JSONParser()).on('data', d => {
 
 ```
 
-Note that the json-stdio NPM package uses json-stream-parser, for an example:
+### If your JSON has white space (newlines etc)
 
-https://github.com/ORESoftware/json-stdio/blob/dev/src/index.ts#L109
+If you JSON has unescaped newlines, then use the delimiter option.
+
+```js
+new JSONParser({delimiter: '∆∆∆'});  // use 3 alt-j's to separate json chunks, since newlines won't work
+
+```
+
+
