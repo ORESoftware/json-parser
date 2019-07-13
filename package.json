@@ -2,12 +2,12 @@
   "name": "@oresoftware/json-stream-parser",
   "version": "0.0.113",
   "description": "Parse JSON streams into JS objects.",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "bin": {
     "json_parser": "cli/json-parser.js"
   },
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
+  "types": "dist/main.d.ts",
+  "typings": "dist/main.d.ts",
   "scripts": {
     "test": "suman test"
   },
