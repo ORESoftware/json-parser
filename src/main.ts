@@ -66,13 +66,49 @@ export class JSONParser extends stream.Transform {
     return this.jpBytesWritten;
   }
   
+  handleJSON(o: string) {
+    
+    let json = null;
+    
+    const trimmed = String(o).trim();
+    
+    if (!trimmed) {
+      return;
+    }
+    
+    try {
+      json = JSON.parse(trimmed);
+    } catch (err) {
+      if (this.debug) {
+        console.error('json-parser:', 'error parsing line:', trimmed);
+        console.error('json-parser:', err.message);
+      }
+      return;
+    }
+    
+    if (json) {
+      
+      if (this.isIncludeByteCount) {
+        json[RawJSONBytesSymbol] = Buffer.byteLength(o);
+        json[JSONBytesSymbol] = Buffer.byteLength(trimmed);
+      }
+      
+      this.push(json);
+      
+      if (this.isTrackBytesWritten) {
+        this.jpBytesWritten += Buffer.byteLength(trimmed);
+      }
+      
+    }
+  }
+  
   _transform(chunk: any, encoding: string, cb: Function) {
     
-    let data = String(chunk);
-    
     if (this.isTrackBytesRead) {
-      this.jpBytesRead += Buffer.from(data).length;
+      this.jpBytesRead += chunk.length;
     }
+    
+    let data = String(chunk);
     
     if (this.lastLineData) {
       data = this.lastLineData + data;
@@ -87,32 +123,7 @@ export class JSONParser extends stream.Transform {
         continue;
       }
       
-      let json = null;
-      const trimmed = String(l).trim();
-      
-      try {
-        // trimmed might be an empty string; ignore if so
-        trimmed && (json = JSON.parse(trimmed));
-      }
-      catch (err) {
-        if (this.debug) {
-          console.error('json-parser:', 'error parsing line:', l);
-          console.error('json-parser:', err.message);
-        }
-        continue;
-        // noop
-      }
-      
-      if (json) {
-        if (this.isTrackBytesWritten) {
-          this.jpBytesWritten += Buffer.from(l).length
-        }
-        if(this.isIncludeByteCount){
-          json[RawJSONBytesSymbol] = Buffer.from(l).length;
-          json[JSONBytesSymbol] = Buffer.from(trimmed).length;
-        }
-        this.push(json);
-      }
+      this.handleJSON(l);
       
     }
     
@@ -121,34 +132,9 @@ export class JSONParser extends stream.Transform {
   }
   
   _flush(cb: Function) {
+    
     if (this.lastLineData) {
-      
-      const lld = this.lastLineData;
-      const  l = String(lld).trim();
-      
-      let json = null;
-      
-      try {
-        json = JSON.parse(l);
-      }
-      catch (err) {
-        if (this.debug) {
-          console.error('json-parser:', 'error parsing line:', l);
-          console.error('json-parser:', err.message);
-        }
-      }
-      
-      if(json){
-        if (this.isTrackBytesWritten) {
-          this.jpBytesWritten += Buffer.from(l).length
-        }
-        if(this.isIncludeByteCount){
-          json[RawJSONBytesSymbol] = Buffer.from(lld).length;
-          json[JSONBytesSymbol] = Buffer.from(l).length;
-        }
-        this.push(json);
-      }
-      
+      this.handleJSON(this.lastLineData);
     }
     this.lastLineData = '';
     cb();
