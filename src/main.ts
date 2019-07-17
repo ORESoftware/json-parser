@@ -79,7 +79,7 @@ export class JSONParser extends stream.Transform {
     try {
       json = JSON.parse(o);
     } catch (err) {
-  
+      
       if (this.debug) {
         console.error('json-parser:', 'error parsing line:', o.trim());
         console.error('json-parser:', err.message);
@@ -92,19 +92,17 @@ export class JSONParser extends stream.Transform {
       return;
     }
     
-    if (json) {
-      
-      if (this.isIncludeByteCount) {
-        json[RawJSONBytesSymbol] = Buffer.byteLength(o);
-      }
-      
-      this.push(json);
-      
-      if (this.isTrackBytesWritten) {
-        this.jpBytesWritten += Buffer.byteLength(o);
-      }
-      
+    if (this.isIncludeByteCount && json && typeof json === 'object') {
+      json[RawJSONBytesSymbol] = Buffer.byteLength(o);
     }
+    
+    this.push(json);
+    
+    if (this.isTrackBytesWritten) {
+      this.jpBytesWritten += Buffer.byteLength(o);
+    }
+    
+    
   }
   
   _transform(chunk: any, encoding: string, cb: Function) {
