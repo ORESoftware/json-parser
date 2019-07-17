@@ -15,7 +15,8 @@ export interface JSONParserOpts {
   delimiter?: string,
   trackBytesWritten?: boolean,
   trackBytesRead?: boolean,
-  includeByteCount?: boolean
+  includeByteCount?: boolean,
+  emitNonJSON?: boolean
 }
 
 export const RawJSONBytesSymbol = Symbol('raw.json.bytes');
@@ -23,6 +24,7 @@ export const JSONBytesSymbol = Symbol('json.bytes');
 
 export class JSONParser extends stream.Transform {
   
+  emitNonJSON = false;
   lastLineData = '';
   debug = false;
   delimiter = '\n';
@@ -34,6 +36,10 @@ export class JSONParser extends stream.Transform {
   
   constructor(opts ?: JSONParserOpts) {
     super({objectMode: true});
+    
+    if (opts && opts.emitNonJSON) {
+      this.emitNonJSON = true;
+    }
     
     if (opts && opts.includeByteCount) {
       this.isIncludeByteCount = true;
@@ -70,19 +76,19 @@ export class JSONParser extends stream.Transform {
     
     let json = null;
     
-    const trimmed = String(o).trim();
-    
-    if (!trimmed) {
-      return;
-    }
-    
     try {
-      json = JSON.parse(trimmed);
+      json = JSON.parse(o);
     } catch (err) {
+  
       if (this.debug) {
-        console.error('json-parser:', 'error parsing line:', trimmed);
+        console.error('json-parser:', 'error parsing line:', o.trim());
         console.error('json-parser:', err.message);
       }
+      
+      if (this.emitNonJSON) {
+        this.emit('string', o);
+      }
+      
       return;
     }
     
@@ -90,13 +96,12 @@ export class JSONParser extends stream.Transform {
       
       if (this.isIncludeByteCount) {
         json[RawJSONBytesSymbol] = Buffer.byteLength(o);
-        json[JSONBytesSymbol] = Buffer.byteLength(trimmed);
       }
       
       this.push(json);
       
       if (this.isTrackBytesWritten) {
-        this.jpBytesWritten += Buffer.byteLength(trimmed);
+        this.jpBytesWritten += Buffer.byteLength(o);
       }
       
     }
