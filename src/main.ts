@@ -138,8 +138,9 @@ export class JSONParser extends stream.Transform {
     
     if (this.lastLineData) {
       this.handleJSON(this.lastLineData);
+      this.lastLineData = '';
     }
-    this.lastLineData = '';
+   
     cb();
   }
   
