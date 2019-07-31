@@ -8,7 +8,7 @@ export const r2gSmokeTest = function () {
   return true;
 };
 
-type EVCb<T> = (err: any, T: any) => void;
+type EVCb<T = any> = (err?: any, T?: any) => void;
 
 export interface JSONParserOpts {
   debug?: boolean,
@@ -18,7 +18,8 @@ export interface JSONParserOpts {
   includeByteCount?: boolean,
   emitNonJSON?: boolean,
   includeRawString?: boolean,
-  stringifyNonJSON?: boolean
+  stringifyNonJSON?: boolean,
+  delayEvery?: number
 }
 
 export const RawStringSymbol = Symbol('raw.json.str');
@@ -38,9 +39,12 @@ export class JSONParser<T = any> extends stream.Transform {
   isTrackBytesWritten = false;
   isIncludeRawString = false;
   isIncludeByteCount = false;
+  delayEvery = -1;
+  delay = false;
+  count = 0;
   
   constructor(opts ?: JSONParserOpts) {
-    super({objectMode: true});
+    super({objectMode: true, highWaterMark: 1});
     
     if (opts && opts.emitNonJSON) {
       this.emitNonJSON = true;
@@ -48,6 +52,12 @@ export class JSONParser<T = any> extends stream.Transform {
     
     if (opts && opts.includeRawString) {
       this.isIncludeRawString = true;
+    }
+    
+    if (opts && opts.delayEvery) {
+      assert(opts.delayEvery && Number.isInteger(opts.delayEvery), 'the "delayEvery" option needs to be a postive integer');
+      this.delay = true;
+      this.delayEvery = opts.delayEvery;
     }
     
     if (opts && opts.includeByteCount) {
@@ -58,7 +68,7 @@ export class JSONParser<T = any> extends stream.Transform {
       this.isTrackBytesWritten = true;
     }
     
-    if(opts && opts.stringifyNonJSON){
+    if (opts && opts.stringifyNonJSON) {
       this.stringifyNonJSON = true;
     }
     
@@ -102,7 +112,7 @@ export class JSONParser<T = any> extends stream.Transform {
         this.emit('string', o);
       }
       
-      if(this.stringifyNonJSON){
+      if (this.stringifyNonJSON) {
         this.emit('data', JSON.stringify(o));
       }
       
@@ -117,6 +127,7 @@ export class JSONParser<T = any> extends stream.Transform {
       json[RawStringSymbol] = o;
     }
     
+    
     this.push(json);
     
     if (this.isTrackBytesWritten) {
@@ -126,13 +137,13 @@ export class JSONParser<T = any> extends stream.Transform {
     
   }
   
-  _transform(chunk: any, encoding: string, cb: Function) {
+  _transform(chunk: any, encoding: string, cb: EVCb<void>) {
     
     if (this.isTrackBytesRead) {
       this.jpBytesRead += chunk.length;
     }
     
-    let data = String(chunk);
+    let data = String(chunk || '');
     
     if (this.lastLineData) {
       data = this.lastLineData + data;
@@ -149,6 +160,15 @@ export class JSONParser<T = any> extends stream.Transform {
       
       this.handleJSON(l);
       
+    }
+    
+    if (this.delay) {
+      if ((this.count++ % this.delayEvery) === 0) {
+        this.count = 0;
+        setImmediate(cb, null);
+        // process.nextTick(cb);
+        return;
+      }
     }
     
     cb();

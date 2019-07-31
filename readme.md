@@ -102,7 +102,7 @@ k.stdout.pipe(new JSONParser()).on('data', d => {
 
 ### If your JSON has white space (newlines etc)
 
-If you JSON has unescaped newlines, then use the delimiter option.
+If you JSON has unescaped newlines, or the JSON is separated by some other character, then use the delimiter option.
 
 ```js
 new JSONParser({delimiter: '∆∆∆'});  // use 3 alt-j's to separate json chunks, since newlines won't work
@@ -113,3 +113,17 @@ For other solutions to parsing JSON from CLIs, see:
 https://stackoverflow.com/questions/56014438/get-single-line-json-from-aws-cli
 
 
+
+### Other options
+
+1. delayEvery: integer  
+
+> every x chunks, will use setImmediate to delay processing, good for not blocking the event loop too much.
+
+
+2. emitNonJSON: boolean
+
+> if there is a line of input that cannot be JSON parsed, it will be emitted as "string", but it will not pushed to output
+
+
+3. there are some secret options in the code, have a look in `lib/main.ts`
