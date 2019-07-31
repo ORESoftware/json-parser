@@ -16,22 +16,27 @@ export interface JSONParserOpts {
   trackBytesWritten?: boolean,
   trackBytesRead?: boolean,
   includeByteCount?: boolean,
-  emitNonJSON?: boolean
+  emitNonJSON?: boolean,
+  includeRawString?: boolean,
+  stringifyNonJSON?: boolean
 }
 
+export const RawStringSymbol = Symbol('raw.json.str');
 export const RawJSONBytesSymbol = Symbol('raw.json.bytes');
 export const JSONBytesSymbol = Symbol('json.bytes');
 
-export class JSONParser extends stream.Transform {
+export class JSONParser<T = any> extends stream.Transform {
   
   emitNonJSON = false;
   lastLineData = '';
   debug = false;
   delimiter = '\n';
   jpBytesWritten = 0;
+  stringifyNonJSON = false;
   jpBytesRead = 0;
   isTrackBytesRead = false;
   isTrackBytesWritten = false;
+  isIncludeRawString = false;
   isIncludeByteCount = false;
   
   constructor(opts ?: JSONParserOpts) {
@@ -41,12 +46,20 @@ export class JSONParser extends stream.Transform {
       this.emitNonJSON = true;
     }
     
+    if (opts && opts.includeRawString) {
+      this.isIncludeRawString = true;
+    }
+    
     if (opts && opts.includeByteCount) {
       this.isIncludeByteCount = true;
     }
     
     if (opts && opts.trackBytesWritten) {
       this.isTrackBytesWritten = true;
+    }
+    
+    if(opts && opts.stringifyNonJSON){
+      this.stringifyNonJSON = true;
     }
     
     if (opts && opts.trackBytesRead) {
@@ -89,11 +102,19 @@ export class JSONParser extends stream.Transform {
         this.emit('string', o);
       }
       
+      if(this.stringifyNonJSON){
+        this.emit('data', JSON.stringify(o));
+      }
+      
       return;
     }
     
     if (this.isIncludeByteCount && json && typeof json === 'object') {
       json[RawJSONBytesSymbol] = Buffer.byteLength(o);
+    }
+    
+    if (this.isIncludeRawString && json && typeof json === 'object') {
+      json[RawStringSymbol] = o;
     }
     
     this.push(json);
@@ -140,7 +161,7 @@ export class JSONParser extends stream.Transform {
       this.handleJSON(this.lastLineData);
       this.lastLineData = '';
     }
-   
+    
     cb();
   }
   
