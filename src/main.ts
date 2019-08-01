@@ -8,7 +8,7 @@ export const r2gSmokeTest = function () {
   return true;
 };
 
-type EVCb<T = any> = (err?: any, T?: any) => void;
+type EVCb<T = any> = (err?: any, v?: T) => void;
 
 export interface JSONParserOpts {
   debug?: boolean,
