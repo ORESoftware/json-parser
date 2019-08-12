@@ -41,7 +41,7 @@ export class JSONParser<T = any> extends stream.Transform {
   isIncludeByteCount = false;
   delayEvery = -1;
   delay = false;
-  count = 0;
+  count = 1;
   
   constructor(opts ?: JSONParserOpts) {
     super({objectMode: true, highWaterMark: 1});
@@ -164,9 +164,8 @@ export class JSONParser<T = any> extends stream.Transform {
     
     if (this.delay) {
       if ((this.count++ % this.delayEvery) === 0) {
-        this.count = 0;
+        this.count = 1;
         setImmediate(cb, null);
-        // process.nextTick(cb);
         return;
       }
     }
