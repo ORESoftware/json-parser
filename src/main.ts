@@ -11,6 +11,7 @@ export const r2gSmokeTest = function () {
 type EVCb<T = any> = (err?: any, v?: T) => void;
 
 export interface JSONParserOpts {
+  wrapMetadata?: boolean,
   debug?: boolean,
   delimiter?: string,
   trackBytesWritten?: boolean,
@@ -42,6 +43,7 @@ export class JSONParser<T = any> extends stream.Transform {
   delayEvery = -1;
   delay = false;
   count = 1;
+  wrapMetadata = false;
   
   constructor(opts ?: JSONParserOpts) {
     super({objectMode: true, highWaterMark: 1});
@@ -50,12 +52,17 @@ export class JSONParser<T = any> extends stream.Transform {
       this.emitNonJSON = true;
     }
     
+    if (opts && ('wrapMetadata' in opts)) {
+      this.wrapMetadata = Boolean(opts.wrapMetadata);
+    }
+    
     if (opts && opts.includeRawString) {
       this.isIncludeRawString = true;
     }
     
-    if (opts && opts.delayEvery) {
-      assert(opts.delayEvery && Number.isInteger(opts.delayEvery), 'the "delayEvery" option needs to be a postive integer');
+    if (opts && ('delayEvery' in opts)) {
+      assert(opts.delayEvery > 1 && Number.isInteger(opts.delayEvery),
+        'the "delayEvery" option needs to be a positive integer greater than 1');
       this.delay = true;
       this.delayEvery = opts.delayEvery;
     }
@@ -101,7 +108,8 @@ export class JSONParser<T = any> extends stream.Transform {
     
     try {
       json = JSON.parse(o);
-    } catch (err) {
+    }
+    catch (err) {
       
       if (this.debug) {
         console.error('json-parser:', 'error parsing line:', o.trim());
@@ -127,13 +135,11 @@ export class JSONParser<T = any> extends stream.Transform {
       json[RawStringSymbol] = o;
     }
     
-    
     this.push(json);
     
     if (this.isTrackBytesWritten) {
       this.jpBytesWritten += Buffer.byteLength(o);
     }
-    
     
   }
   
