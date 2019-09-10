@@ -105,17 +105,22 @@ export class JSONParser<T = any> extends stream.Transform {
 
   handleJSON(o: string) {
 
-    if (this.cleanFront) {
-      // sometimes there is some noise in the beginning of a line before the JSON starts
-      const ib = o.indexOf('["');
-      if (ib !== 0) {
-        const iz = o.indexOf('{"');
-        if (ib >= 0 || iz >= 0) {
-          let i = Math.min(ib, iz);
-          o = o.slice(i);
-        }
-      }
-    }
+    // if (this.cleanFront) {
+    //   // sometimes there is some noise in the beginning of a line before the JSON starts
+    //   if (!((o[0] === '[' || o[0] === '{') && o[1] === '"')) {
+    //     const ib = o.indexOf('["');
+    //     const iz = o.indexOf('{"');
+    //     if (ib >= 0 || iz >= 0) {
+    //       let i = Math.min(ib, iz);
+    //       if (!o.slice(0, i).match(this.delimiter)) {
+    //         o = o.slice(i);
+    //       }
+    //
+    //     }
+    //   }
+    // }
+
+    // console.log('ooooo:', o);
 
     let json = null;
 

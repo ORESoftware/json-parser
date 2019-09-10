@@ -23,6 +23,7 @@ const {JSONParser} = require('@oresoftware/json-stream-parser');
 
 console.log('Running test', __filename);
 
+
 const k = cp.spawn('bash');
 const foo = 'medicine';
 
@@ -35,8 +36,7 @@ k.stdin.end(`
   {"foo":"$foo"}    ∆∆
   {"foo":"$foo"} ∆
   ∆{"foo":"$foo"}∆
-  
-  EOF
+EOF
 
 `);
 
@@ -48,8 +48,14 @@ const to = setTimeout(() => {
 
 let count = 0;
 
+k.stdout.on('data', d => {
+  console.log('XOKOEE',String(d));
+});
+
 k.stdout.pipe(new JSONParser({delimiter:'∆'})).on('data', d => {
 
+  console.log("HERE IS ONE:", d);
+  
   count++;
 
   if(count > 3){
