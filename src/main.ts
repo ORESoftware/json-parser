@@ -103,6 +103,19 @@ export class JSONParser<T = any> extends stream.Transform {
     return this.jpBytesWritten;
   }
   
+  sliceStr(o: string) {
+    const ib = o.indexOf('["');
+    const iz = o.indexOf('{"');
+    if (ib > 0 && ib >= iz) {
+      o = o.slice(ib);
+    }
+    else if(iz > 0 && iz >= ib){
+      o = o.slice(ib);
+    }
+    console.log('sliced json-stream string:', o);
+    return o;
+  }
+  
   handleJSON(o: string) {
     
     console.log('raw json-stream string:', o);
@@ -110,13 +123,7 @@ export class JSONParser<T = any> extends stream.Transform {
     if (this.cleanFront) {
       // sometimes there is some noise in the beginning of a line before the JSON starts
       if (!((o[0] === '[' || o[0] === '{') && o[1] === '"')) {
-        const ib = o.indexOf('["');
-        const iz = o.indexOf('{"');
-        if (ib >= 0 || iz >= 0) {
-          let i = Math.min(ib, iz);
-          o = o.slice(i);
-          console.log('sliced json-stream string:', o);
-        }
+        o = this.sliceStr(o);
       }
     }
     
