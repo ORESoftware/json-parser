@@ -104,12 +104,18 @@ export class JSONParser<T = any> extends stream.Transform {
   }
   
   sliceStr(o: string) {
+    
+    const z = o.indexOf('∆˚ø');
+    if (z >= 0) {
+      return o.slice(z);
+    }
+    
     const ib = o.indexOf('["');
     const iz = o.indexOf('{"');
     if (ib > 0 && ib >= iz) {
       o = o.slice(ib);
     }
-    else if(iz > 0 && iz >= ib){
+    else if (iz > 0 && iz >= ib) {
       o = o.slice(iz);
     }
     console.log('sliced json-stream string:', o);
@@ -122,6 +128,7 @@ export class JSONParser<T = any> extends stream.Transform {
     
     if (this.cleanFront) {
       // sometimes there is some noise in the beginning of a line before the JSON starts
+      // for example with syslog, or with raw docker-compose logs, etc
       if (!((o[0] === '[' || o[0] === '{') && o[1] === '"')) {
         o = this.sliceStr(o);
       }
