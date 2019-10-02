@@ -110,7 +110,7 @@ export class JSONParser<T = any> extends stream.Transform {
       o = o.slice(ib);
     }
     else if(iz > 0 && iz >= ib){
-      o = o.slice(ib);
+      o = o.slice(iz);
     }
     console.log('sliced json-stream string:', o);
     return o;
