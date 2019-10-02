@@ -105,6 +105,8 @@ export class JSONParser<T = any> extends stream.Transform {
   
   handleJSON(o: string) {
     
+    console.log('raw json-stream string:', o);
+    
     if (this.cleanFront) {
       // sometimes there is some noise in the beginning of a line before the JSON starts
       if (!((o[0] === '[' || o[0] === '{') && o[1] === '"')) {
@@ -113,6 +115,7 @@ export class JSONParser<T = any> extends stream.Transform {
         if (ib >= 0 || iz >= 0) {
           let i = Math.min(ib, iz);
           o = o.slice(i);
+          console.log('sliced json-stream string:', o);
         }
       }
     }
