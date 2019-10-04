@@ -118,13 +118,13 @@ export class JSONParser<T = any> extends stream.Transform {
     else if (iz > 0 && iz >= ib) {
       o = o.slice(iz);
     }
-    console.log('sliced json-stream string:', o);
+    // console.log('sliced json-stream string:', o);
     return o;
   }
   
   handleJSON(o: string) {
     
-    console.log('raw json-stream string:', o);
+    // console.log('raw json-stream string:', o);
     
     if (this.cleanFront) {
       // sometimes there is some noise in the beginning of a line before the JSON starts
