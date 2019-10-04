@@ -106,20 +106,25 @@ export class JSONParser<T = any> extends stream.Transform {
   sliceStr(o: string) {
     
     const z = o.indexOf('∆˚ø');
+    
     if (z >= 0) {
       return o.slice(z);
     }
     
-    const ib = o.indexOf('["');
-    const iz = o.indexOf('{"');
-    if (ib > 0 && ib >= iz) {
-      o = o.slice(ib);
-    }
-    else if (iz > 0 && iz >= ib) {
-      o = o.slice(iz);
-    }
+    const i = [
+      o.indexOf('["'),
+      o.indexOf('{"'),
+      o.indexOf('[['),
+      o.indexOf('[[[')
+    ].reduce((a, b) => b > 0 && b < a ? b : a, 0);
+    
     // console.log('sliced json-stream string:', o);
-    return o;
+    
+    if (i <= 0) {
+      return o;
+    }
+    
+    return o.slice(i);
   }
   
   handleJSON(o: string) {
