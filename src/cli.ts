@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import {JSONParser} from './main';
+import {JSONParser} from './main.js';
 
 // example use:  echo '{"foo":"bar", "zoo": {"star":3}}' | json_parser
 

@@ -1,0 +1,62 @@
+{
+  "ai": {
+    "defaultModel": "gpt-5.2",
+    "fallbackModel": "gemini-3.0-pro",
+    "allowedModels": [
+      "gpt-5.2",
+      "gemini-3.0-pro"
+    ]
+  },
+  "project": {
+    "name": "@oresoftware/json-stream-parser",
+    "description": "Parse JSON streams into JS objects.",
+    "homepage": "https://github.com/ORESoftware/json-parser#readme",
+    "repository": {
+      "host": "github",
+      "owner": "ORESoftware",
+      "name": "json-parser",
+      "url": "https://github.com/ORESoftware/json-parser",
+      "issues": "https://github.com/ORESoftware/json-parser/issues"
+    }
+  },
+  "npm": {
+    "packageName": "@oresoftware/json-stream-parser",
+    "version": "0.0.124",
+    "main": "dist/main.js",
+    "types": "dist/main.d.ts",
+    "bin": {
+      "json_parser": "cli/json-parser.js"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "test": "npm run build && node test/run.js"
+    }
+  },
+  "paths": {
+    "srcDir": "src",
+    "distDir": "dist",
+    "testDir": "test",
+    "readme": "readme.md",
+    "tsconfig": "tsconfig.json",
+    "entrypoints": {
+      "library": "src/main.ts",
+      "cli": "src/cli.ts"
+    },
+    "built": {
+      "library": "dist/main.js",
+      "cli": "dist/cli.js"
+    }
+  },
+  "links": {
+    "npm": "https://www.npmjs.com/package/@oresoftware/json-stream-parser",
+    "github": "https://github.com/ORESoftware/json-parser",
+    "issues": "https://github.com/ORESoftware/json-parser/issues",
+    "homepage": "https://github.com/ORESoftware/json-parser#readme"
+  },
+  "git": {
+    "remoteName": "origin",
+    "defaultBranch": "master",
+    "remoteUrlSsh": "git@github.com:ORESoftware/json-parser.git",
+    "remoteUrlHttps": "https://github.com/ORESoftware/json-parser.git"
+  }
+}

@@ -1,15 +1,27 @@
 {
   "name": "@oresoftware/json-stream-parser",
-  "version": "0.0.124",
+  "version": "2.0.0",
   "description": "Parse JSON streams into JS objects.",
-  "main": "dist/main.js",
+  "type": "module",
+  "main": "./dist/main.js",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.js",
+      "require": "./dist/cjs/main.js",
+      "default": "./dist/main.js"
+    }
+  },
   "bin": {
     "json_parser": "cli/json-parser.js"
   },
-  "types": "dist/main.d.ts",
-  "typings": "dist/main.d.ts",
+  "types": "./dist/main.d.ts",
+  "typings": "./dist/main.d.ts",
   "scripts": {
-    "test": "suman test"
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p tsconfig.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && node scripts/prep-cjs.mjs",
+    "test": "npm run build && node test/run.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +41,8 @@
   "homepage": "https://github.com/ORESoftware/json-parser#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^12.6.8"
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
   },
   "r2g": {
     "test": "node .r2g/tests/smoke-test.1.js"

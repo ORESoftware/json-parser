@@ -26,6 +26,14 @@ import {JSONParser} from '@oresoftware/json-stream-parser';
 
 ```
 
+### Import (CommonJS)
+
+```js
+
+const {JSONParser} = require('@oresoftware/json-stream-parser');
+
+```
+
 ### Usage
 
 Right now, the library assumes each separate chunk of json is separated by newline characters. <br>

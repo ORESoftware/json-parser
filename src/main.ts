@@ -1,7 +1,7 @@
 'use strict';
 
 import * as stream from 'stream';
-import * as assert from 'assert';
+import * as assert from 'node:assert/strict';
 
 export const r2gSmokeTest = function () {
   // r2g command line app uses this exported function
@@ -62,7 +62,7 @@ export class JSONParser<T = any> extends stream.Transform {
     }
     
     if (opts && ('delayEvery' in opts)) {
-      assert(opts.delayEvery > 1 && Number.isInteger(opts.delayEvery),
+      assert.ok(opts.delayEvery > 1 && Number.isInteger(opts.delayEvery),
         'the "delayEvery" option needs to be a positive integer greater than 1');
       this.delay = true;
       this.delayEvery = opts.delayEvery;
@@ -90,7 +90,7 @@ export class JSONParser<T = any> extends stream.Transform {
     }
     
     if (opts && 'delimiter' in opts) {
-      assert(opts.delimiter && typeof opts.delimiter === 'string', '"delimiter" option should be a string value.');
+      assert.ok(opts.delimiter && typeof opts.delimiter === 'string', '"delimiter" option should be a string value.');
       this.delimiter = opts.delimiter;
     }
   }
@@ -111,12 +111,14 @@ export class JSONParser<T = any> extends stream.Transform {
       return o.slice(z);
     }
     
-    const i = [
+    const indices = [
       o.indexOf('["'),
       o.indexOf('{"'),
       o.indexOf('[['),
       o.indexOf('[[[')
-    ].reduce((a, b) => b > 0 && b < a ? b : a, 0);
+    ].filter(v => v >= 0);
+    
+    const i = indices.length ? Math.min(...indices) : -1;
     
     // console.log('sliced json-stream string:', o);
     
