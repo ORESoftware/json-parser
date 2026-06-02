@@ -126,7 +126,14 @@ https://stackoverflow.com/questions/56014438/get-single-line-json-from-aws-cli
 
 1. delayEvery: integer  
 
-> every x chunks, will use setImmediate to delay processing, good for not blocking the event loop too much.
+> JSONParser delays the transform callback every x chunks. LiveMutexJSONParser delays every x non-empty JSON records, which is better for long JSONL chunks that should not monopolize the event loop.
+
+```js
+import {LiveMutexJSONParser, createLiveMutexJSONParser} from '@oresoftware/json-stream-parser';
+
+const parser = new LiveMutexJSONParser({delayEvery: 1024});
+const parserWithDefaultDelay = createLiveMutexJSONParser();
+```
 
 
 2. emitNonJSON: boolean
