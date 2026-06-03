@@ -1,6 +1,6 @@
 {
   "name": "@oresoftware/json-stream-parser",
-  "version": "0.1.135",
+  "version": "0.1.136",
   "description": "Parse JSON streams into JS objects.",
   "type": "module",
   "main": "./dist/main.js",
