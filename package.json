@@ -1,6 +1,6 @@
 {
   "name": "@oresoftware/json-stream-parser",
-  "version": "2.0.0",
+  "version": "0.1.136",
   "description": "Parse JSON streams into JS objects.",
   "type": "module",
   "main": "./dist/main.js",
@@ -45,6 +45,6 @@
     "typescript": "^5.9.3"
   },
   "r2g": {
-    "test": "node .r2g/tests/smoke-test.1.js"
+    "test": "node .r2g/tests/phase-contract.cjs --phase-z"
   }
 }

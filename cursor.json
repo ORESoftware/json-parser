@@ -21,7 +21,7 @@
   },
   "npm": {
     "packageName": "@oresoftware/json-stream-parser",
-    "version": "0.0.124",
+    "version": "0.1.135",
     "main": "dist/main.js",
     "types": "dist/main.d.ts",
     "bin": {
