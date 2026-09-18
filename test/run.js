@@ -331,3 +331,32 @@ await test('benchmarks JSONParser and LiveMutexJSONParser head-to-head', async (
     `LiveMutexJSONParser ${live.ms.toFixed(2)}ms (${liveRate}/s)\n`
   );
 });
+
+await test('stringifyNonJSON emits a JSON string for unparseable lines', async () => {
+  const p = new JSONParser({ stringifyNonJSON: true });
+  const input = new PassThrough();
+  const outP = collectStream(input.pipe(p));
+  input.end('not-json\n{"ok":true}\n');
+  const out = await outP;
+  assert.deepEqual(out, [JSON.stringify('not-json'), { ok: true }]);
+});
+
+await test('sliceStr prefers the stream marker over later JSON starts', async () => {
+  const p = new JSONParser();
+  const s = 'noise ∆˚ø{"a":1}';
+  assert.equal(p.sliceStr(s), '{"a":1}');
+});
+
+await test('LiveMutexJSONParser parses UTF-8 from Uint8Array chunks', async () => {
+  const payload = Buffer.from('{"msg":"café"}\n{"n":2}\n', 'utf8');
+  const chunks = [new Uint8Array(payload.subarray(0, 8)), new Uint8Array(payload.subarray(8))];
+  const out = await parseChunks(LiveMutexJSONParser, undefined, chunks);
+  assert.deepEqual(out, [{ msg: 'café' }, { n: 2 }]);
+});
+
+await test('debug must be boolean and wrapMetadata is stored', async () => {
+  assert.throws(() => new JSONParser({ debug: 'yes' }), /boolean/);
+  const p = new JSONParser({ debug: false, wrapMetadata: true });
+  assert.equal(p.debug, false);
+  assert.equal(p.wrapMetadata, true);
+});
